@@ -18,5 +18,8 @@
   "homepage": "https://github.com/sarahabing/web_content_assessment#readme",
   "dependencies": {
     "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "eslint": "^5.12.1"
   }
 }
