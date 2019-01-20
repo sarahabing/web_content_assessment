@@ -18,8 +18,12 @@
   "homepage": "https://github.com/sarahabing/web_content_assessment#readme",
   "dependencies": {
     "async": "^2.6.1",
+    "body-parser": "^1.18.3",
+    "cookie-parser": "^1.4.3",
     "express": "^4.16.4",
     "lodash": "^4.17.11",
+    "morgan": "^1.9.1",
+    "mssql": "^4.3.0",
     "pug": "^2.0.3",
     "tedious": "^4.1.3"
   },
