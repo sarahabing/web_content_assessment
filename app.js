@@ -1,14 +1,33 @@
-const http = require('http');
+const Connection = require('tedious').Connection;
+const Request = require('tedious').Request;
 
-const hostname = 'localhost';
-const port = 3000;
+    //Getting Database info, which I used Azure for
+    //because it was quick and easy.
+    const config =
+        {
+            options: {
+                database: 'Assessment',
+                encrypt: true
+            },
+            authentication: {
+                type: "default",
+                options: {
+                    userName: "abingsa",
+                    password: "Sceptile321!",
+                }
+            },
+            server: 'assessmentsaraha.database.windows.net',
+        };
 
-const server = http.createServer((req, res) => {
-    res.statusCode = 200;
-    res.setHeader('Content-Type', 'text/plain');
-    res.end('Hello World\n');
-});
+    //Establishing the Connection...
+    const connection = new Connection(config);
 
-server.listen(port, hostname, () => {
-    console.log(`Server running at http://${hostname}:${port}/`);
-});
+    connection.on('connect', (err) => {
+        if (err) {
+            console.log('Error', err);
+        } else {
+            console.log('Connected to ' + config.server);
+        }
+    });
+
+
