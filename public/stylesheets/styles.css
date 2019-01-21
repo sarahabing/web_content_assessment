@@ -1,0 +1,20 @@
+body {
+    background-color: #efefef;
+}
+
+.container {
+    background-color: #fff;
+    padding: 1em;
+}
+
+
+.bg-light {
+    background-color: #3889FF !important;
+}
+.navbar-brand  {
+    color: #fff !important;
+}
+
+.nav-item a:hover {
+    color: #fff !important;
+}

@@ -2,9 +2,41 @@ doctype html
 html
     head
         title Create Records
-        link(rel='stylesheet', href='/bootstrap/css/bootstrap.min.css')
-        link(rel='stylesheet', href='/bootstrap/css/bootstrap-responsive.min.css')
+        link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/styles.css')
     body
-        h1 Create Communication
-        p Testing Boi
-        a(href='/') Go Back
+        include navigation.pug
+        div.container
+            h1 Create a New Record
+            form(action="/create_communication", method="POST")
+                //person_id
+                input(
+                type='number'
+                name='person_id'
+                )
+
+                input(
+                type="text"
+                name="communication_date"
+                )
+
+                input(
+                type="text"
+                name="communication_type"
+                )
+
+                input(
+                type="text"
+                name="reason"
+                )
+
+                input(
+                type="text"
+                name="direction"
+                )
+
+                input(
+                type="submit"
+                value="Create Record"
+                )
+
