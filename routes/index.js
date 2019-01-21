@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
         try {
             let pool = await sql.connect(config);
             let result = await pool.request()
-                .query('select * from Assessment',function(err, recordset) {
+                .query('select top 10 * from Assessment',function(err, recordset) {
                     console.log("recordset: ", recordset);
                     res.render('index', {json: JSON.stringify(recordset.recordset)});
 
