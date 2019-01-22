@@ -13,12 +13,13 @@ router.get('/', (req, res) => {
                 .query('select top 10 * from Assessment',function(err, recordset) {
                     console.log("recordset: ", recordset);
                     res.render('index', {json: JSON.stringify(recordset.recordset)});
+                    sql.close();
 
                 });
         } catch (err) {
             console.log(err);
-        } finally {
-            pool.close(); //closing connection after request is finished.
+            sql.close();
+
         }
 
     })()

@@ -8,35 +8,45 @@ html
         include navigation.pug
         div.container
             h1 Create a New Record
-            form(action="/create_communication", method="POST")
+            form(action="/create", method="POST")
                 //person_id
-                input(
-                type='number'
-                name='person_id'
-                )
+                div.form-group
+                    label(for='person_id') Person ID:
+                    input(
+                    type='number'
+                    name='person_id'
+                    )
+                div.form-group
+                    label(for='communication_date') Date:
+                    input(
+                    type="date"
+                    name="communication_date"
+                    )
 
-                input(
-                type="text"
-                name="communication_date"
-                )
+                div.form-group
+                    label(for='communication_type') Type:
+                    input(
+                    type="text"
+                    name="communication_type"
+                    )
 
-                input(
-                type="text"
-                name="communication_type"
-                )
 
-                input(
-                type="text"
-                name="reason"
-                )
+                div.form-group
+                    label(for='reason') Reason:
+                    input(
+                    type="text"
+                    name="reason"
+                    )
+                div.form-group
+                    label(for='direction') Direction:
+                    input(
+                    type="text"
+                    name="direction"
+                    )
 
-                input(
-                type="text"
-                name="direction"
-                )
-
-                input(
-                type="submit"
-                value="Create Record"
-                )
+                div.form-group
+                    input(
+                    type="submit"
+                    value="Create Record"
+                    )
 
