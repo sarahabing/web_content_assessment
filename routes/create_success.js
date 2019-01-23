@@ -4,7 +4,7 @@ const config = require('../dbconfig');
 const sql = require('mssql');
 
 router.get('/', (req, res) => {
-    res.render('create', {title: 'Create'})
+    res.render('create_success', {title: 'Create'})
 });
 
 module.exports = router;

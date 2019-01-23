@@ -1,9 +1,44 @@
 doctype html
 html
     head
-        title Filtering Records
+        title=title
         link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/styles.css')
-
     body
         include navigation.pug
+        div.container
+            h1 Create a New Record
+            form(action="/filter", method="GET")
+                div.form-group
+                    label(for='date_1') From:
+                    input(
+                    type="date"
+                    name="date_1"
+                    )
+                    label(for='date_2') To:
+                    input(
+                    type="date"
+                    name="date_2"
+                    )
+
+                div.form-group
+                    label(for='reason') Reason:
+                    input(
+                    type="text"
+                    name="reason"
+                    )
+
+                div.form-group
+                    label(for='type') Type:
+                    input(
+                    type="text"
+                    name="type"
+                    )
+
+
+                div.form-group
+                    input(
+                    type="submit"
+                    value="Get Records"
+                    )
+
