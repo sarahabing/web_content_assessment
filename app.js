@@ -55,15 +55,19 @@ app.get('/filter', function(req,res){
 
             let request = new sql.Request(pool);
             request.input('date_1', sql.Date, startDate);
-            request.input('date_2', sql.VarChar(100), endDate);
+            request.input('date_2', sql.Date, endDate);
             request.input('reason', sql.VarChar(100), reason);
             request.input('type', sql.VarChar(100), type);
+
+            //should be sum
+            //can't sum a varchar? and converting/casting to int
+            //throws an error on Datagrip
+
             let query = "select count(reason) from Assessment where communication_date BETWEEN @date_1 AND @date_2 AND communication_type = @type AND reason = @reason";
 
-            request.query(query, function(err, rows) {
-                console.log(query)
-                if(rows){
-                    data["Data"] = rows.recordsets;
+            request.query(query, function(err, recordset) {
+                if(recordset){
+                    data["Data"] = recordset.recordsets;
                     res.json(data);
                 }else{
                     data["Data"] = 'No data Found..';
