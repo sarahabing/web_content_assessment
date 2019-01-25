@@ -15,10 +15,15 @@ const display = require ('./routes/display_records');
 const filtering = require ('./routes/filtering_records');
 const postCreate = require ('./routes/create_success');
 
+const paginate = require('express-paginate');
+
+
 
 const path = require('path');
 
 let app = express();
+
+app.use(paginate.middleware(10, 50));
 
 //View Engine Setup
 app.set('view engine', 'pug');

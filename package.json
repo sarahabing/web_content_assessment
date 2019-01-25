@@ -19,8 +19,12 @@
   "dependencies": {
     "async": "^2.6.1",
     "body-parser": "^1.18.3",
+    "canvas": "^2.3.1",
+    "chart.js": "^2.7.3",
+    "chartjs": "^0.3.24",
     "cookie-parser": "^1.4.3",
     "express": "^4.16.4",
+    "express-paginate": "^1.0.0",
     "express4-tedious": "^0.3.0",
     "hapi": "^18.0.0",
     "joi": "^14.3.1",

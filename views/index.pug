@@ -7,8 +7,17 @@ html
 
     body
         include navigation.pug
+        include _paginate
         div.container
-            p=json
+            table.table-striped.table-responsive.table
+                each c in col
+                    th=c
+                each record in recordset
+                    tr
+                        td=td=record.person_id
+                        td=record.communication_date
+                        td=record.communication_type
+                        td=record.reason
+                        td=record.direction
 
-            p I'm only displaying the first 10 or so records so this page doesn't get incredibly long :)
 
