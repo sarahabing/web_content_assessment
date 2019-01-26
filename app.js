@@ -14,6 +14,8 @@ const create = require ('./routes/create_communication');
 const display = require ('./routes/display_records');
 const filtering = require ('./routes/filtering_records');
 const postCreate = require ('./routes/create_success');
+const getGraph = require ('./routes/get_graph');
+
 
 const paginate = require('express-paginate');
 
@@ -40,6 +42,8 @@ app.use('/create_communication', create);
 app.use('/display', display);
 app.use('/filtering_records', filtering);
 app.use('/create_success', postCreate);
+app.use('/get_graph', getGraph);
+
 
 //for stylesheet
 app.use(express.static(__dirname + '/public'));

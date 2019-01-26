@@ -19,3 +19,7 @@ body {
     color: #fff !important;
 }
 
+table {
+    display: inline-block;
+    margin: 0 auto;
+}
