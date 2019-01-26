@@ -4,6 +4,9 @@ html
         title Sarah Abing
         link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/styles.css')
+        script(src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js')
 
     body
         include navigation.pug
+        div.container
+            canvas#myFirstChart

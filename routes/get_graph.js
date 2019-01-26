@@ -2,33 +2,68 @@ const express = require('express');
 const router = express.Router();
 const config = require('../dbconfig');
 const sql = require('mssql');
-
-const app = require('../app');
-const ChartjsNode = require('chartjs-node');
-
+const Chart = require('chartjs');
+const cheerio = require('cheerio')
 
 router.get('/', (req, res) => {
+    (async function () {
+        try {
+            let pool = await sql.connect(config);
+            let request = await pool.request()
+                .query('select * from Assessment order by person_id',function(err, recordset) {
+                    // const dom = new JSDOM(res);
+                    // let canvas = dom.window.document.getElementById("myFirstChart");
+                    const $ = cheerio.load(res);
+                    let canvas = $('#myFirstChart');
+                    $.html()
 
-    let chartNode = new ChartjsNode(600, 600);
-    let chartJsOptions = {
-        type: 'pie',
-        data: recordset.recordset
-    };
+                    // let ctx = canvas.getContext('2d');
 
-    return chartNode.drawChart(chartJsOptions).then(()=>{
+                    // Global Options:
+                    // Chart.defaults.global.defaultFontColor = 'Tomato';
+                    // Chart.defaults.global.defaultFontSize = 16;
+                    //
+                    // // Data with datasets options
+                    // let data = {
+                    //     labels: ["One", "Two", "Tree", "Four", "Five", "Six", "Seven"],
+                    //     datasets: [
+                    //         {
+                    //             label: "Numbers !",
+                    //             fill: true,
+                    //             backgroundColor: "orange",
+                    //             borderColor: "tomato",
+                    //             data: recordset.recordset,
+                    //         }
+                    //     ]
+                    // };
+                    // // Chart declaration with some options:
+                    // let myFirstChart = new Chart(ctx, {
+                    //     type: 'line',
+                    //     data: data,
+                    //     options: {
+                    //         title: {
+                    //             fontSize: 20,
+                    //             display: true,
+                    //             text: 'My First Chart !'
+                    //         }
+                    //     }
+                    // })
 
-        return chartNode.getImageBuffer('image/png');
+                    //render the pug file
+                    res.render('get_graph', {recordset: recordset.recordset});
+                    //close the session
+                    sql.close();
+                });
 
 
-    }).then(buffer=>{
-        Array.isArray(buffer);
-        return chartNode.getImageStream('image/png');
-    }).then(streamResult=>{
-        return chartNode.writeImageToFile('image/png', './testimage.png');
+        } catch (err) {
+            console.log(err);
+            sql.close();
 
+        }
 
-    })
-
+    })()
 });
+
 
 module.exports = router;

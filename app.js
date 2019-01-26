@@ -36,6 +36,14 @@ app.use(logger("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use(function (req, res, next) {
+    //Enabling CORS
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, contentType,Content-Type, Accept, Authorization");
+    next();
+});
+
 //routes
 app.use('/', index);
 app.use('/create_communication', create);
@@ -47,6 +55,7 @@ app.use('/get_graph', getGraph);
 
 //for stylesheet
 app.use(express.static(__dirname + '/public'));
+
 
 //get request on filtering page
 app.get('/filter', function(req,res){
@@ -94,13 +103,44 @@ app.get('/filter', function(req,res){
     })()
 });
 
-//post request on create records page
-//why is the response blank even though it
-//writes to the database?
+//GET ENDPOINT
+app.get('/getRecords', function(req, res) {
+    (async function () {
+        try {
+            let pool = await sql.connect(config);
+            let request = await pool.request()
+                .query('select * from Assessment order by person_id',function(err, recordset) {
+                    let data = {
+                        "Data":""
+                    };
+                    if(recordset){
+                        data["Data"] = recordset.recordsets[0];
+                        res.json(data);
+                    }else{
+                        data["Data"] = 'No data Found..';
+                        res.json(data);
+                    }
+
+                    //close the session
+                    sql.close();
+
+
+                });
+        } catch (err) {
+            console.log(err);
+            sql.close();
+
+        }
+
+    })();
+});
+
+//POST ENDPOINT
 app.post('/create', function (req, res) {
 
     (async function () {
         try {
+            let data;
             const id = req.body.person_id;
             const date = req.body.communication_date;
             const type = req.body.communication_type;
@@ -118,11 +158,15 @@ app.post('/create', function (req, res) {
 
                 request.query("insert into Assessment values (@person_id, @communication_date, @communication_type, @reason, @direction)").
                 then(()=> {
-                    transaction.commit(err=> {
+
+                    transaction.commit((err)=> {
                         if (err){
+                            data["Data"] = 'No data Found..';
+                            res.send(data);
                             console.log(err)
                             sql.close();
                         } else {
+                            res.send(req.body);
                             console.log('Transaction Committed');
                             sql.close();
 
@@ -134,10 +178,86 @@ app.post('/create', function (req, res) {
             console.log(err);
             sql.close();
         }
-        res.redirect('/create_success');
     })()
 });
 
+//PUT ENDPOINT
+app.put('/editUser/:person_id', function(req, res) {
+    (async function () {
+        try {
+            let data = {};
+            let pool = await sql.connect(config);
+            let request = await pool.request();
+            let transaction = await pool.transaction();
+
+            transaction.begin(err=> {
+                const request = new sql.Request(transaction);
+                request.query("UPDATE Assessment SET person_id= " + req.body.person_id  +  ", communication_type= '" +
+                    req.body.communication_type + "', communication_date= '" + req.body.communication_date + "', reason= '"
+                    + req.body.reason + "', direction= '" + req.body.direction + "' WHERE person_id= " + req.params.person_id).then(()=> {
+                    transaction.commit((err)=> {
+                        if (err){
+                            res.send(data);
+                            console.log(err);
+                            sql.close();
+                        } else {
+                            res.send(req.body);
+                            console.log('Transaction Changed');
+                            sql.close();
+
+                        }
+                    });
+                });
+            });
+
+
+        } catch (err) {
+            console.log(err);
+            sql.close();
+
+        }
+
+    })();
+});
+
+//DELETE ENDPOINT
+app.delete('/deleteUser/:person_id', function(req, res) {
+    (async function () {
+        try {
+            let data = {};
+            let pool = await sql.connect(config);
+            let request = await pool.request();
+            let transaction = await pool.transaction();
+
+            transaction.begin(err=> {
+                const request = new sql.Request(transaction);
+                request.query("DELETE FROM Assessment WHERE person_id=" + req.params.person_id).then(()=> {
+                    transaction.commit((err)=> {
+                        if (err){
+
+                            res.send(data);
+                            console.log(err);
+                            sql.close();
+                        } else {
+                            data= {"Data": "Row Deleted"};
+                            res.send(data);
+                            console.log('Row Deleted');
+                            sql.close();
+
+                        }
+                    });
+                });
+            });
+
+
+        } catch (err) {
+            console.log(err);
+            sql.close();
+
+        }
+
+    })();
+});
 
 //listening on port 3000
 const server = app.listen(process.env.PORT || 3000, function () {
