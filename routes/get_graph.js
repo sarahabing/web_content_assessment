@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
         return chartNode.getImageStream('image/png');
     }).then(streamResult=>{
         return chartNode.writeImageToFile('image/png', './testimage.png');
-        
+
 
     })
 
