@@ -57,41 +57,45 @@ app.use('/get_graph', getGraph);
 app.use(express.static(__dirname + '/public'));
 
 
-//get request on filtering page
-app.get('/filter', function(req,res){
+//filtering
+app.get('/filter/:type', function(req,res){
 
     (async function () {
         try {
             let pool = await sql.connect(config);
-            let startDate = req.body.date_1;
-            let endDate = req.body.date_2;
-            let type = req.body.type;
-            let reason = req.body.reason;
+
+            let type = req.query.type;
             let data = {
                 "Data":""
             };
 
             let request = new sql.Request(pool);
-            request.input('date_1', sql.Date, startDate);
-            request.input('date_2', sql.Date, endDate);
-            request.input('reason', sql.VarChar(100), reason);
-            request.input('type', sql.VarChar(100), type);
 
+            request.input('type', String, type);
+
+            console.log(reason)
             //should be sum
             //can't sum a varchar? and converting/casting to int
             //throws an error on Datagrip
 
-            let query = "select count(reason) as theCount from Assessment where communication_type = @type AND reason = @reason AND communication_date BETWEEN @date_1 AND @date_2";
+            //let query = "select count(reason) as theCount from Assessment where reason=@reason AND communication_type=@type communication_date BETWEEN @date_1 AND @date_2";
+            let query = "select count(reason) as theCount from Assessment where communication_type=@type";
 
             request.query(query, function(err, recordset) {
-                if(recordset){
+                console.log(query);
+                let data = {
+                    "Data":""
+                };
+                if (recordset){
                     data["Data"] = recordset.recordsets[0];
-                    res.json(data);
-                }else{
+                    res.send(data)
+                    sql.close();
+                } else {
                     data["Data"] = 'No data Found..';
                     res.json(data);
+                    sql.close();
+
                 }
-                sql.close();
 
             });
         } catch (err) {
