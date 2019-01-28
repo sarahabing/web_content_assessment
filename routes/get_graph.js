@@ -2,16 +2,8 @@ const express = require('express');
 const router = express.Router();
 const config = require('../dbconfig');
 const sql = require('mssql');
-const d3nPie = require('d3node-piechart');
-const output = require('d3node-output');
-const d3 = require('d3-node')().d3;
 const fs = require('fs');
 
-const canvasModule = require('canvas');
-
-let options = { canvasModule };
-
-let d3n = new D3Node(options);
 
 
 router.get('/', (req, res) => {
