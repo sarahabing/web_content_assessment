@@ -12,10 +12,9 @@ router.get('/', (req, res) => {
         try {
             let pool = await sql.connect(config);
             let request = await pool.request()
-                .query('select * from Assessment order by person_id',function(err, recordset) {
+                .query('select * from Assessment order by person_id OFFSET 10 * (10 - 1) ROWS FETCH NEXT 20 ROWS ONLY;',function(err, recordset) {
                     //get column headings for the table
                     let col = [];
-                    let row = [];
                     for (let i = 0; i < recordset.recordset.length; i++) {
                         for (let key in recordset.recordset[i]) {
                             if (col.indexOf(key) === -1) {
@@ -23,14 +22,13 @@ router.get('/', (req, res) => {
                             }
                         }
                     }
+
+                    //paginate
                     const itemCount = 10;
                     const pageCount = Math.ceil(itemCount / req.query.limit);
 
                         //render the pug file
-                        res.render('index', {col: col, recordset: recordset.recordset,
-                            pageCount: pageCount,
-                            itemCount: itemCount,
-                            pages: paginate.getArrayPages(req)(3, pageCount, req.query.page)});
+                        res.render('index', {col: col, recordset: recordset.recordset});
 
                         //close the session
                         sql.close();

@@ -7,14 +7,13 @@ html
 
     body
         include navigation.pug
-        include _paginate
         div.container
             table.table-striped.table-responsive.table.text-center
                 each c in col
                     th=c
                 each record in recordset
                     tr
-                        td=td=record.person_id
+                        td=record.person_id
                         td=record.communication_date
                         td=record.communication_type
                         td=record.reason

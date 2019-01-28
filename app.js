@@ -82,7 +82,7 @@ app.get('/filter', function(req,res){
             //throws an error on Datagrip
 
             //let query = "select count(reason) as theCount from Assessment where reason=@reason AND communication_type=@type communication_date BETWEEN @date_1 AND @date_2";
-            let query = "select count(reason) as theCount from Assessment where communication_type= '"+ req.query.type +"' and reason= '" + req.query.reason + "' and communication_date between '"+ req.query.date1 +"' and '" + req.query.date2 + "'";
+            let query = "select count(reason) as numRows from Assessment where communication_type= '"+ req.query.type +"' and reason= '" + req.query.reason + "' and communication_date between '"+ req.query.date1 +"' and '" + req.query.date2 + "'";
 
             request.query(query, function(err, recordset) {
                 console.log(query);
@@ -92,13 +92,13 @@ app.get('/filter', function(req,res){
                 if (recordset){
                     data["Data"] = recordset.recordsets[0];
                     res.send(data)
-                    sql.close();
                 } else {
                     data["Data"] = 'No data Found..';
                     res.json(data);
-                    sql.close();
 
                 }
+
+                sql.close();
 
             });
         } catch (err) {
@@ -117,7 +117,7 @@ app.get('/getRecords', function(req, res) {
         try {
             let pool = await sql.connect(config);
             let request = await pool.request()
-                .query('select * from Assessment order by person_id',function(err, recordset) {
+                .query('select * from Assessment order by person_id OFFSET 10 * (10 - 1) ROWS FETCH NEXT 20 ROWS ONLY;',function(err, recordset) {
                     let data = {
                         "Data":""
                     };
