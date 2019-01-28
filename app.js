@@ -58,28 +58,31 @@ app.use(express.static(__dirname + '/public'));
 
 
 //filtering
-app.get('/filter/:type', function(req,res){
+//GET ENDPOINT
+//http://localhost:3000/filter?date_1=2019-01-01&date_2=2019-01-31&reason=transfer&type=call
+app.get('/filter', function(req,res){
 
     (async function () {
         try {
             let pool = await sql.connect(config);
 
             let type = req.query.type;
+            let reason = req.query.reason;
+            let date1 = req.query.date1;
+            let date2 = req.query.date2;
+
             let data = {
                 "Data":""
             };
 
             let request = new sql.Request(pool);
 
-            request.input('type', String, type);
-
-            console.log(reason)
             //should be sum
             //can't sum a varchar? and converting/casting to int
             //throws an error on Datagrip
 
             //let query = "select count(reason) as theCount from Assessment where reason=@reason AND communication_type=@type communication_date BETWEEN @date_1 AND @date_2";
-            let query = "select count(reason) as theCount from Assessment where communication_type=@type";
+            let query = "select count(reason) as theCount from Assessment where communication_type= '"+ req.query.type +"' and reason= '" + req.query.reason + "' and communication_date between '"+ req.query.date_1 +"' and '" + req.query.date_2 + "'";
 
             request.query(query, function(err, recordset) {
                 console.log(query);
@@ -108,6 +111,7 @@ app.get('/filter/:type', function(req,res){
 });
 
 //GET ENDPOINT
+//http://localhost:3000/getRecords
 app.get('/getRecords', function(req, res) {
     (async function () {
         try {
@@ -140,6 +144,7 @@ app.get('/getRecords', function(req, res) {
 });
 
 //POST ENDPOINT
+//http://localhost:3000/create
 app.post('/create', function (req, res) {
 
     (async function () {
@@ -186,6 +191,7 @@ app.post('/create', function (req, res) {
 });
 
 //PUT ENDPOINT
+//http://localhost:3000/editUser/1
 app.put('/editUser/:person_id', function(req, res) {
     (async function () {
         try {
@@ -225,6 +231,7 @@ app.put('/editUser/:person_id', function(req, res) {
 });
 
 //DELETE ENDPOINT
+//http://localhost:3000/deleteUser/1
 app.delete('/deleteUser/:person_id', function(req, res) {
     (async function () {
         try {
