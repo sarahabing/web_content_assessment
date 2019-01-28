@@ -82,7 +82,7 @@ app.get('/filter', function(req,res){
             //throws an error on Datagrip
 
             //let query = "select count(reason) as theCount from Assessment where reason=@reason AND communication_type=@type communication_date BETWEEN @date_1 AND @date_2";
-            let query = "select count(reason) as theCount from Assessment where communication_type= '"+ req.query.type +"' and reason= '" + req.query.reason + "' and communication_date between '"+ req.query.date_1 +"' and '" + req.query.date_2 + "'";
+            let query = "select count(reason) as theCount from Assessment where communication_type= '"+ req.query.type +"' and reason= '" + req.query.reason + "' and communication_date between '"+ req.query.date1 +"' and '" + req.query.date2 + "'";
 
             request.query(query, function(err, recordset) {
                 console.log(query);
